@@ -105,6 +105,8 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         // セル内のボタンのアクションをソースコードで設定する
         cell.likeButton.addTarget(self, action:#selector(handleButton(_:event:)), forControlEvents:  UIControlEvents.TouchUpInside)
+
+        cell.commentButton.addTarget(self, action:#selector(handleComment(_:event:)), forControlEvents:  UIControlEvents.TouchUpInside)
         
         return cell
     }
@@ -152,11 +154,79 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
             let caption = postData.caption
             let time = (postData.date?.timeIntervalSinceReferenceDate)! as NSTimeInterval
             let likes = postData.likes
+            let comments = postData.comments
             
             // 辞書を作成してFirebaseに保存する
-            let post = ["caption": caption!, "image": imageString!, "name": name!, "time": time, "likes": likes]
+            let post = ["caption": caption!, "image": imageString!, "name": name!, "time": time, "likes": likes, "comments": comments]
             let postRef = FIRDatabase.database().reference().child(CommonConst.PostPATH)
             postRef.child(postData.id!).setValue(post)
         }
+    }
+    
+    func handleComment(sender: UIButton, event:UIEvent) {
+        let alert:UIAlertController = UIAlertController(title:"コメント",
+                                                        message: "コメントを入力してください",
+                                                        preferredStyle: UIAlertControllerStyle.Alert)
+        
+        let cancelAction:UIAlertAction = UIAlertAction(title: "Cancel",
+                                                       style: UIAlertActionStyle.Cancel,
+                                                       handler:{
+                                                        (action:UIAlertAction!) -> Void in
+                                                        print("Cancel")
+        })
+        let defaultAction:UIAlertAction = UIAlertAction(title: "OK",
+                                                        style: UIAlertActionStyle.Default,
+                                                        handler:{
+                                                            (action:UIAlertAction!) -> Void in
+                                                            
+                                                            var text = ""
+                                                            let textFields:Array<UITextField>? =  alert.textFields as Array<UITextField>?
+                                                            if textFields != nil {
+                                                                for textField:UITextField in textFields! {
+                                                                    //各textにアクセス
+                                                                    text = text + textField.text!
+                                                                }
+                                                            }
+                                                            
+                                                            let touch = event.allTouches()?.first
+                                                            let point = touch!.locationInView(self.tableView)
+                                                            let indexPath = self.tableView.indexPathForRowAtPoint(point)
+
+                                                            
+                                                            // 配列からタップされたインデックスのデータを取り出す
+                                                            let postData = self.postArray[indexPath!.row]
+                                                            
+                                                            // Firebaseに保存するデータの準備
+                                                            if let uid = FIRAuth.auth()?.currentUser?.uid {
+                                                                let postname = FIRAuth.auth()!.currentUser!.displayName!
+                                                                let comment = [
+                                                                    "uid": uid,
+                                                                    "name": postname,
+                                                                    "text": text
+                                                                ]
+                                                                
+                                                                postData.comments.append(comment)
+                                                                
+                                                                let imageString = postData.imageString
+                                                                let name = postData.name
+                                                                let caption = postData.caption
+                                                                let time = (postData.date?.timeIntervalSinceReferenceDate)! as NSTimeInterval
+                                                                let likes = postData.likes
+                                                                let comments = postData.comments
+                                                                
+                                                                // 辞書を作成してFirebaseに保存する
+                                                                let post = ["caption": caption!, "image": imageString!, "name": name!, "time": time, "likes": likes, "comments": comments]
+                                                                let postRef = FIRDatabase.database().reference().child(CommonConst.PostPATH)
+                                                                postRef.child(postData.id!).setValue(post)
+                                                            }
+                                                            
+        })
+        alert.addAction(cancelAction)
+        alert.addAction(defaultAction)
+        
+        //textfiledの追加
+        alert.addTextFieldWithConfigurationHandler({(text:UITextField!) -> Void in
+        })
+        presentViewController(alert, animated: true, completion: nil)
     }
 }

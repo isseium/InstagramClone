@@ -118,15 +118,15 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="nQ8-Dk-Xv2">
-                                <rect key="frame" x="20" y="20" width="560" height="580"/>
+                                <rect key="frame" x="0.0" y="20" width="600" height="580"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="nQ8-Dk-Xv2" firstAttribute="leading" secondItem="jXa-K8-Nu8" secondAttribute="leadingMargin" id="GKh-GV-eAI"/>
+                            <constraint firstAttribute="trailing" secondItem="nQ8-Dk-Xv2" secondAttribute="trailing" id="IG5-Rg-PRT"/>
+                            <constraint firstItem="nQ8-Dk-Xv2" firstAttribute="leading" secondItem="jXa-K8-Nu8" secondAttribute="leading" id="Mnv-zl-FsI"/>
                             <constraint firstItem="KjW-Ju-IMz" firstAttribute="top" secondItem="nQ8-Dk-Xv2" secondAttribute="bottom" id="Oz9-ic-zwi"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="nQ8-Dk-Xv2" secondAttribute="trailing" id="YvA-p3-Bf4"/>
                             <constraint firstItem="nQ8-Dk-Xv2" firstAttribute="top" secondItem="Aqc-DH-BIB" secondAttribute="bottom" id="nWt-UB-1zm"/>
                         </constraints>
                     </view>
